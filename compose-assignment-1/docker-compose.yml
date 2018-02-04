@@ -1,0 +1,39 @@
+version: "3.4"
+
+services:
+  drupal:
+    image: drupal
+    ports:
+      - 8080:80
+    volumes:
+      - type: volume
+        source: drupal_sites
+        target: /var/www/html/sites
+      - type: volume
+        source: drupal_modules
+        target: /var/www/html/modules
+      - type: volume
+        source: drupal_profiles
+        target: /var/www/html/profiles
+      - type: volume
+        source: drupal_themes
+        target: /var/www/html/themes
+    restart: always
+  pg:
+    image: postgres:9.6
+    environment:
+      POSTGRES_PASSWORD: some_password
+    volumes:
+      - type: volume
+        source: pg_data
+        target: /var/lib/postgresql/data
+    restart: always
+
+volumes:
+  drupal_themes:
+  drupal_sites:
+  drupal_profiles:
+  drupal_modules:
+  pg_data:
+
+

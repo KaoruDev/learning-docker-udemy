@@ -30,8 +30,27 @@
 # Bonus Extra Credit
 # this will not have you setting up a complete image useful for local develement, test, and prod
 # it's just meant to get you started with basic Dockerfile concepts and not focus too much on
-# proper Node.js use in a container. **If you happen to be a Node.js Developer**, then 
-# after you get through more of this course, you should come back and use my 
-# Node Docker Good Defaults sample project on GitHub to change this Dockerfile for 
+# proper Node.js use in a container. **If you happen to be a Node.js Developer**, then
+# after you get through more of this course, you should come back and use my
+# Node Docker Good Defaults sample project on GitHub to change this Dockerfile for
 # better local development with more advanced topics
 # https://github.com/BretFisher/node-docker-good-defaults
+
+FROM node:6-alpine
+
+# - then it should use alpine package manager to install tini: 'apk add --update tini'
+RUN /bin/sh -c 'apk add --update tini'
+
+# - then it should create directory /usr/src/app for app files with 'mkdir -p /usr/src/app'
+WORKDIR  /user/src/app
+COPY ./ ./
+
+# - then it needs to run 'npm install' to install dependencies from that file
+# - to keep it clean and small, run 'npm cache clean --force' after above
+RUN /bin/sh -c 'npm install \
+      && npm cache clean --force'
+
+
+EXPOSE 3000
+
+CMD ["tini", "--", "node", "./bin/www"]
